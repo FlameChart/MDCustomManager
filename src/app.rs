@@ -1,0 +1,35 @@
+use gtk::prelude::*;
+use gtk::{ApplicationWindow, Label};
+use adw::Application;
+
+pub struct App {
+    pub window: ApplicationWindow,
+}
+
+impl App {
+    pub fn new(app: &Application) -> Self {
+        // 创建一个标签控件
+        let label = Label::builder()
+            .label("Hello, World!")
+            .margin_top(12)
+            .margin_bottom(12)
+            .margin_start(12)
+            .margin_end(12)
+            .build();
+
+        // 创建一个垂直的盒子容器
+        let content = gtk::Box::new(gtk::Orientation::Vertical, 8);
+        content.append(&label);
+
+        // 创建应用程序窗口
+        let window = ApplicationWindow::builder()
+            .application(app)
+            .title("MuseDash Custom Manager")
+            .default_width(800)
+            .default_height(480)
+            .child(&content)
+            .build();
+
+        Self { window }
+    }
+}
