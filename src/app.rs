@@ -2,6 +2,11 @@ use adw::{Application, HeaderBar};
 use gtk::prelude::*;
 use gtk::{Align, ApplicationWindow, Label, Stack, StackSwitcher, StackTransitionType};
 
+mod stack_home;
+mod stack_mods;
+mod stack_songs;
+mod stack_tools;
+
 pub struct App {
     pub window: ApplicationWindow,
 }
