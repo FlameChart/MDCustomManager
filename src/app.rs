@@ -1,6 +1,6 @@
 use adw::{Application, HeaderBar};
 use gtk::prelude::*;
-use gtk::{Align, ApplicationWindow, Label, Stack, StackSwitcher, StackTransitionType};
+use gtk::{Align, ApplicationWindow, Box, Button, Label, MenuButton, Orientation, PopoverMenu, Separator, Stack, StackSwitcher, StackTransitionType};
 
 mod stack_home;
 mod stack_mods;
@@ -23,15 +23,11 @@ impl App {
             .build();
 
         // Vertical Box Container in the main window
-        let content = gtk::Box::new(gtk::Orientation::Vertical, 8);
+        let content = Box::new(Orientation::Vertical, 8);
         content.append(&hello_world_label);
 
-        // Make the stack / switcher working.
+        // Make the stack & switcher working.
         let stack = Stack::builder()
-            .margin_top(12i32)
-            .margin_end(12i32)
-            .margin_start(12i32)
-            .margin_bottom(12i32)
             .halign(Align::Fill)
             .valign(Align::Fill)
             .transition_type(StackTransitionType::SlideLeftRight)
@@ -43,10 +39,52 @@ impl App {
         stack.add_titled(&content, Some("songs"), "Songs");
         stack.add_titled(&content, Some("tools"), "Tools");
 
+        // dropdown items
+        let menu_about = Button::builder()
+            .label("About")
+            // .icon_name("help-about-symbolic")
+            .build();
+        
+        let menu_settings = Button::builder()
+            .label("Settings")
+            // .icon_name("preferences-system-symbolic")
+            .build();
+        
+        let menu_label = Label::builder()
+            .label("Muse Dash Custom Manager")
+            .build();
+        
+
+        // dropdown content box
+        let menu_content = Box::builder()
+            .margin_top(12i32)
+            .margin_bottom(12i32)
+            .margin_start(12i32)
+            .margin_end(12i32)
+            .spacing(6i32)
+            .orientation(Orientation::Vertical)
+            .build();
+        menu_content.append(&menu_settings);
+        menu_content.append(&Separator::new(Orientation::Horizontal));
+        menu_content.append(&menu_about);
+        menu_content.append(&menu_label);
+
+        // Creates the dropdown (or popover) menu
+        let menu_popover = PopoverMenu::builder()
+            .child(&menu_content)
+            .build();
+
+        // and here is the main trigger
+        let menu_button = MenuButton::builder()
+            .icon_name("open-menu-symbolic")
+            .popover(&menu_popover)
+            .build();
+
         // The Custom HeaderBar with Switcher (but the stack is still missing)
         let header_bar = HeaderBar::builder()
             .title_widget(&StackSwitcher::builder().stack(&stack).build())
             .build();
+        header_bar.pack_start(&menu_button);
 
         // Application Window
         let window = ApplicationWindow::builder()
