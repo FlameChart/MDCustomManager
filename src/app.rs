@@ -1,6 +1,6 @@
 use gtk::prelude::*;
 use gtk::{ApplicationWindow, Label};
-use adw::Application;
+use adw::{Application, HeaderBar, ViewSwitcher};
 
 pub struct App {
     pub window: ApplicationWindow,
@@ -8,25 +8,32 @@ pub struct App {
 
 impl App {
     pub fn new(app: &Application) -> Self {
-        // 创建一个标签控件
-        let label = Label::builder()
+        // Hello World Label
+        let hello_world_label = Label::builder()
             .label("Hello, World!")
             .margin_top(12)
             .margin_bottom(12)
             .margin_start(12)
             .margin_end(12)
             .build();
+        
+        // TODO: Make the stack working.
+        
+        // The Custom HeaderBar with Switcher (but the stack is still missing)
+        let header_bar = HeaderBar::new();
+        header_bar.set_title_widget(Some(&ViewSwitcher::new()));
 
-        // 创建一个垂直的盒子容器
+        // Vertical Box Container in the main window
         let content = gtk::Box::new(gtk::Orientation::Vertical, 8);
-        content.append(&label);
+        content.append(&hello_world_label);
 
-        // 创建应用程序窗口
+        // Application Window
         let window = ApplicationWindow::builder()
             .application(app)
             .title("MuseDash Custom Manager")
-            .default_width(800)
-            .default_height(480)
+            .titlebar(&header_bar)
+            .default_width(900)
+            .default_height(640)
             .child(&content)
             .build();
 
