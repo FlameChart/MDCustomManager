@@ -1,6 +1,6 @@
+use adw::{Application, HeaderBar};
 use gtk::prelude::*;
-use gtk::{ApplicationWindow, Label};
-use adw::{Application, HeaderBar, ViewSwitcher};
+use gtk::{Align, ApplicationWindow, Label, Stack, StackSwitcher, StackTransitionType};
 
 pub struct App {
     pub window: ApplicationWindow,
@@ -11,21 +11,37 @@ impl App {
         // Hello World Label
         let hello_world_label = Label::builder()
             .label("Hello, World!")
-            .margin_top(12)
-            .margin_bottom(12)
-            .margin_start(12)
-            .margin_end(12)
+            .margin_top(12i32)
+            .margin_bottom(12i32)
+            .margin_start(12i32)
+            .margin_end(12i32)
             .build();
-        
-        // TODO: Make the stack working.
-        
-        // The Custom HeaderBar with Switcher (but the stack is still missing)
-        let header_bar = HeaderBar::new();
-        header_bar.set_title_widget(Some(&ViewSwitcher::new()));
 
         // Vertical Box Container in the main window
         let content = gtk::Box::new(gtk::Orientation::Vertical, 8);
         content.append(&hello_world_label);
+
+        // Make the stack / switcher working.
+        let stack = Stack::builder()
+            .margin_top(12i32)
+            .margin_end(12i32)
+            .margin_start(12i32)
+            .margin_bottom(12i32)
+            .halign(Align::Fill)
+            .valign(Align::Fill)
+            .transition_type(StackTransitionType::SlideLeftRight)
+            .transition_duration(800u32)
+            .build();
+
+        stack.add_titled(&content, Some("home"), "Home");
+        stack.add_titled(&content, Some("mods"), "Mods");
+        stack.add_titled(&content, Some("songs"), "Songs");
+        stack.add_titled(&content, Some("tools"), "Tools");
+
+        // The Custom HeaderBar with Switcher (but the stack is still missing)
+        let header_bar = HeaderBar::builder()
+            .title_widget(&StackSwitcher::builder().stack(&stack).build())
+            .build();
 
         // Application Window
         let window = ApplicationWindow::builder()
@@ -34,7 +50,7 @@ impl App {
             .titlebar(&header_bar)
             .default_width(900)
             .default_height(640)
-            .child(&content)
+            .child(&stack)
             .build();
 
         Self { window }
