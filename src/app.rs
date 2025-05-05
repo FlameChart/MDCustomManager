@@ -1,8 +1,8 @@
 use adw::{Application, HeaderBar};
 use gtk::prelude::*;
 use gtk::{
-    Align, ApplicationWindow, Box, Button, MenuButton, Orientation, PopoverMenu, Separator,
-    Stack, StackSwitcher, StackTransitionType,
+    Align, ApplicationWindow, Box, Button, MenuButton, Orientation, PopoverMenu, Separator, Stack,
+    StackSwitcher, StackTransitionType,
 };
 
 mod stack_home;
@@ -24,21 +24,15 @@ impl App {
             .transition_duration(800u32)
             .build();
 
+        // Adding and binding pages
         stack.add_titled(&stack_home::create(), Some("home"), "Home");
         stack.add_titled(&stack_mods::create(), Some("mods"), "Mods");
         stack.add_titled(&stack_songs::create(), Some("songs"), "Songs");
         stack.add_titled(&stack_tools::create(), Some("tools"), "Tools");
 
         // dropdown items
-        let menu_about = Button::builder()
-            .label("About")
-            // .icon_name("help-about-symbolic")
-            .build();
-
-        let menu_settings = Button::builder()
-            .label("Settings")
-            // .icon_name("preferences-system-symbolic")
-            .build();
+        let menu_settings = Button::builder().label("Settings").build();
+        let menu_about = Button::builder().label("About").build();
 
         // dropdown content box
         let menu_content = Box::builder()
@@ -49,17 +43,16 @@ impl App {
             .spacing(6i32)
             .orientation(Orientation::Vertical)
             .build();
+
+        // here arranges all the elements
         menu_content.append(&menu_settings);
         menu_content.append(&Separator::new(Orientation::Horizontal));
         menu_content.append(&menu_about);
 
-        // Creates the dropdown (or popover) menu
-        let menu_popover = PopoverMenu::builder().child(&menu_content).build();
-
         // and here is the main trigger
         let menu_button = MenuButton::builder()
             .icon_name("open-menu-symbolic")
-            .popover(&menu_popover)
+            .popover(&PopoverMenu::builder().child(&menu_content).build())
             .build();
 
         // The Custom HeaderBar with Switcher (but the stack is still missing)
