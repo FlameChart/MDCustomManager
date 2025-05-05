@@ -1,6 +1,9 @@
 use adw::{Application, HeaderBar};
 use gtk::prelude::*;
-use gtk::{Align, ApplicationWindow, Box, Button, Label, MenuButton, Orientation, PopoverMenu, Separator, Stack, StackSwitcher, StackTransitionType};
+use gtk::{
+    Align, ApplicationWindow, Box, Button, MenuButton, Orientation, PopoverMenu, Separator,
+    Stack, StackSwitcher, StackTransitionType,
+};
 
 mod stack_home;
 mod stack_mods;
@@ -13,19 +16,6 @@ pub struct App {
 
 impl App {
     pub fn new(app: &Application) -> Self {
-        // Hello World Label
-        let hello_world_label = Label::builder()
-            .label("Hello, World!")
-            .margin_top(12i32)
-            .margin_bottom(12i32)
-            .margin_start(12i32)
-            .margin_end(12i32)
-            .build();
-
-        // Vertical Box Container in the main window
-        let content = Box::new(Orientation::Vertical, 8);
-        content.append(&hello_world_label);
-
         // Make the stack & switcher working.
         let stack = Stack::builder()
             .halign(Align::Fill)
@@ -34,26 +24,21 @@ impl App {
             .transition_duration(800u32)
             .build();
 
-        stack.add_titled(&content, Some("home"), "Home");
-        stack.add_titled(&content, Some("mods"), "Mods");
-        stack.add_titled(&content, Some("songs"), "Songs");
-        stack.add_titled(&content, Some("tools"), "Tools");
+        stack.add_titled(&stack_home::create(), Some("home"), "Home");
+        stack.add_titled(&stack_mods::create(), Some("mods"), "Mods");
+        stack.add_titled(&stack_songs::create(), Some("songs"), "Songs");
+        stack.add_titled(&stack_tools::create(), Some("tools"), "Tools");
 
         // dropdown items
         let menu_about = Button::builder()
             .label("About")
             // .icon_name("help-about-symbolic")
             .build();
-        
+
         let menu_settings = Button::builder()
             .label("Settings")
             // .icon_name("preferences-system-symbolic")
             .build();
-        
-        let menu_label = Label::builder()
-            .label("Muse Dash Custom Manager")
-            .build();
-        
 
         // dropdown content box
         let menu_content = Box::builder()
@@ -67,12 +52,9 @@ impl App {
         menu_content.append(&menu_settings);
         menu_content.append(&Separator::new(Orientation::Horizontal));
         menu_content.append(&menu_about);
-        menu_content.append(&menu_label);
 
         // Creates the dropdown (or popover) menu
-        let menu_popover = PopoverMenu::builder()
-            .child(&menu_content)
-            .build();
+        let menu_popover = PopoverMenu::builder().child(&menu_content).build();
 
         // and here is the main trigger
         let menu_button = MenuButton::builder()
