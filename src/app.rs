@@ -1,4 +1,4 @@
-use adw::{Application, HeaderBar};
+use adw::{AboutDialog, Application, HeaderBar};
 use gtk::prelude::*;
 use gtk::{
     Align, ApplicationWindow, Box, Button, MenuButton, Orientation, PopoverMenu, Separator, Stack,
